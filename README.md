@@ -1,4 +1,4 @@
-# simple pattern lock algorythm for ILI9341
+# simple pattern lock algorithm for ILI9341
 
 This demo shows how to realize a simple algorithm for a pattern lock with an ILI9341 touchscreen and the Arduino IDE.
 
