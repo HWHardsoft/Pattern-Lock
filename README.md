@@ -6,6 +6,7 @@ This demo shows how to realize a simple algorithm for a pattern lock with an ILI
 ## Hardware
 The demo was written for the AZ-Touch. The [AZ-Touch MOD (for ESP32 DEV KIT C)](https://www.hwhardsoft.de/english/projects/arduitouch-esp/), the [AZ-Touch MKR (for Arduino MKR)](https://www.hwhardsoft.de/english/projects/arduitouch-mkr/) or the [AZ-Touch Feather](https://www.hwhardsoft.de/english/projects/az-touch-feather/) can be used as hardware. Of course you can also simply connect an ILI9341 based touch screen with jumper wires to a microcontroller board and adapt the code accordingly. 
 
+![eingabe](https://github.com/HWHardsoft/Pattern-Lock/assets/3049858/aa4e0912-4303-4ea2-9661-8be6a5a71216)
 
 ## Usage
 
