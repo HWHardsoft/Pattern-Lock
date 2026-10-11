@@ -1,7 +1,7 @@
 /*
  *  Application note: Simple Pattern Lock for AZ-Touch MKR and Feather 
  *  Version 1.1
- *  Copyright (C) 2024  Hartmut Wendt  www.zihatec.de
+ *  Copyright (C) 2026  Hartmut Wendt  www.zihatec.de
  *  
  *
  *  This program is free software: you can redistribute it and/or modify
