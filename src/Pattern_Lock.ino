@@ -1,6 +1,6 @@
 /*
  *  Application note: Simple Pattern Lock for AZ-Touch MKR and Feather 
- *  Version 1.0
+ *  Version 1.1
  *  Copyright (C) 2024  Hartmut Wendt  www.zihatec.de
  *  
  *
@@ -22,6 +22,9 @@
 
 /*______Import Libraries_______*/
 #include <Arduino.h>
+#if defined(ESP32)
+  #include <esp_arduino_version.h>
+#endif
 #include <SPI.h>
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9341.h"
@@ -69,9 +72,9 @@
 
 /*___End of Keylock spezific definitions___*/
 
-#if defined(ARDUINO_ESP32_DEV)  // ESP32 DEV KITC (AZ-Touch MOD only)
+#if defined(TFT_RST)
   Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
-#else  
+#else
   Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 #endif
   
@@ -109,13 +112,23 @@ void setup() {
   drawlockScreen(); 
   
 
-  //sound configuration
-  #if defined(ESP32) 
-    ledcSetup(0,1E5,12);
-    ledcAttachPin(BEEPER,0);
+  // Sound configuration
+  // ESP32 Arduino Core 3.x changed LEDC from channel-based to pin-based API.
+  // Keep compatibility with both the current 3.x core and older 2.x cores.
+  #if defined(ESP32)
+    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+      if (!ledcAttach(BEEPER, 1000, 10)) {
+        Serial.println("Warning: LEDC beeper setup failed");
+      }
+    #else
+      ledcSetup(0, 1000, 10);
+      ledcAttachPin(BEEPER, 0);
+    #endif
+  #else
+    pinMode(BEEPER, OUTPUT);
   #endif
 
-   Serial.println("Initialization finished!");
+  Serial.println("Initialization finished!");
    
 }
 
@@ -358,14 +371,18 @@ void Denied_Screen() {
  * @return    None
  *********************************************************************/
 void sound(int freq) {
-  #if defined(ESP32)  // ESP32 feather w/wing
-  
-  // ESP32
-  ledcWriteTone(0,freq);
-  
+  #if defined(ESP32)
+
+    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+      // Arduino-ESP32 3.x: LEDC functions use the GPIO pin.
+      ledcWriteTone(BEEPER, freq);
+    #else
+      // Arduino-ESP32 2.x and older: LEDC functions use the channel.
+      ledcWriteTone(0, freq);
+    #endif
+
   #else
-  if (freq) tone(BEEPER,freq);
-  else noTone(BEEPER);
-  
+    if (freq) tone(BEEPER, freq);
+    else noTone(BEEPER);
   #endif
 }
